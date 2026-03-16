@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script defer src="/alpine.js"></script>
+    <title>orpheus</title>
+</head>
+<body>
+    <div x-data="{
+        imageLinks: [],
+        isLoading: false,
+        async fetchImageLinks() {
+            try {
+                const res = await fetch('/files');
+                const data = await res.json();
+                this.imageLinks = Array.isArray(data) ? data : [];
+            } catch (e) { console.error(e); }
+        },
+        async postCapture() {
+            this.isLoading = true;
+            try {
+                const res = await fetch('/capture', { method: 'POST' });
+                const data = await res.json();
+                if (data) this.imageLinks = [...this.imageLinks, data];
+            } catch (e) { console.error(e); }
+            finally { this.isLoading = false; }
+        }
+    }" x-init="fetchImageLinks()">
+        <button @click="postCapture()" :disabled="isLoading">
+            <span x-text="isLoading ? 'Capturing...' : 'Capture'">Capture</span>
+        </button>
+
+        <ul>
+            <template x-for="(link, index) in imageLinks" :key="index">
+                <li>
+                    <a :href="'/files/' + link" x-text="link"></a>
+                </li>
+            </template>
+        </ul>
+    </div>
+</body>
+</html>

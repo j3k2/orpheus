@@ -5,9 +5,14 @@ import "net/http"
 func NewRouter() http.Handler {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/capture", CaptureHandler)
-    fs := http.FileServer(http.Dir("./static"))
-    mux.Handle("/", fs)
+	mux.HandleFunc("/capture", Capture)
+
+	mux.HandleFunc("GET /files/", ListFiles)
+	mux.HandleFunc("GET /files/{filename}", GetFile)
+
+	gui := http.FileServer(http.Dir("./gui"))
+	mux.Handle("/", gui)
+
 	return loggingMiddleware(mux)
 }
 
