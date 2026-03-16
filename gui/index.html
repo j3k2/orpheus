@@ -2,6 +2,7 @@
 <html>
 <head>
     <script defer src="/alpine.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
     <title>orpheus</title>
 </head>
 <body>
@@ -29,12 +30,12 @@
             <span x-text="isLoading ? 'Capturing...' : 'Capture'">Capture</span>
         </button>
 
-        <ul>
-            <template x-for="(link, index) in imageLinks" :key="index">
-                <li>
-                    <a :href="'/files/' + link" x-text="link"></a>
-                </li>
-            </template>
+        <ul>    
+        <template x-for="(link, index) in imageLinks" :key="index">
+            <li>
+                <a :href="'/files/' + link" x-text="link"></a>
+            </li>
+        </template>
         </ul>
     </div>
 </body>
