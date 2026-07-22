@@ -53,6 +53,35 @@ func ListFiles(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(fileNames)
 }
 
+func Clear(w http.ResponseWriter, r *http.Request) {
+ err := os.MkdirAll(imageDir, 0755)
+    if err != nil {
+        http.Error(w, "Unable to create directory: "+err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    entries, err := os.ReadDir(imageDir)
+    if err != nil {
+        http.Error(w, "Unable to read files: "+err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    var fileNames []string
+    for _, entry := range entries {
+        if !entry.IsDir() {
+			path := filepath.Join(imageDir, entry.Name())
+			if err := os.Remove(path); err != nil {
+				http.Error(w, "Unable to delete "+entry.Name()+": "+err.Error(), http.StatusInternalServerError)
+				return
+			}
+			fileNames = append(fileNames, entry.Name())
+		}
+    }
+
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(fileNames)
+}
+
 func GetFile(w http.ResponseWriter, r *http.Request) {
 	filename := r.PathValue("filename")
 

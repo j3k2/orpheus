@@ -1,12 +1,11 @@
 # orpheus
 
 `orpheus` is an extremely lightweight Web-based GUI for capturing and viewing camera stills with `rpicam-still` commands. 
-Especially useful when running on the lower-spec Raspberry Pi Zero to capture still images, 
-without the overhead of live preview or video capture.
+Especially useful when running on the lower-spec Raspberry Pi Zero, without the overhead of live preview or video capture.
 
 # Installation
 
-In the `/orpheus` directory, build with
+In the `orpheus/` directory, build with
 
 ```
 go build .
@@ -27,7 +26,7 @@ Specify the port for the HTTP server with a `port` flag
 
 # Development
 
-Run within the `/orpheus` directory with 
+Run within the `orpheus/` directory with 
 ```
 go run .
 ```

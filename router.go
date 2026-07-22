@@ -7,6 +7,8 @@ func NewRouter() http.Handler {
 
 	mux.HandleFunc("/capture", Capture)
 
+	mux.HandleFunc("/clear", Clear)
+
 	mux.HandleFunc("GET /files/", ListFiles)
 	mux.HandleFunc("GET /files/{filename}", GetFile)
 

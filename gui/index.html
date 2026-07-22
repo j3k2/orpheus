@@ -8,7 +8,8 @@
 <body>
     <div x-data="{
         imageLinks: [],
-        isLoading: false,
+        isCapturing: false,
+        isClearing: false,
         async fetchImageLinks() {
             try {
                 const res = await fetch('/files');
@@ -17,17 +18,28 @@
             } catch (e) { console.error(e); }
         },
         async postCapture() {
-            this.isLoading = true;
+            this.isCapturing = true;
             try {
                 const res = await fetch('/capture', { method: 'POST' });
                 const data = await res.json();
                 if (data) this.imageLinks = [...this.imageLinks, data];
             } catch (e) { console.error(e); }
-            finally { this.isLoading = false; }
+            finally { this.isCapturing = false; }
+        },
+        async postClear() {
+            const confirmed = window.confirm('Are you sure you want to delete all images?')
+            if (confirmed) {
+                this.isClearing = true;
+                try {
+                    const res = await fetch('/clear', { method: 'POST' });
+                    this.imageLinks = [];
+                } catch (e) { console.error(e); }
+                finally { this.isClearing = false; }
+            }
         }
     }" x-init="fetchImageLinks()">
-        <button @click="postCapture()" :disabled="isLoading">
-            <span x-text="isLoading ? 'Capturing...' : 'Capture'">Capture</span>
+        <button @click="postCapture()" :disabled="isCapturing || isClearing">
+            <span x-text="isCapturing ? 'Capturing...' : 'Capture'">Capture</span>
         </button>
 
         <ul>    
@@ -37,6 +49,9 @@
             </li>
         </template>
         </ul>
+        <button x-show="imageLinks.length > 0" @click="postClear()" :disabled="isCapturing || isClearing">
+            <span x-text="isClearing ? 'Clearing...' : 'Clear'">Clear</span>
+        </button>
     </div>
 </body>
 </html>
